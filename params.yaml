@@ -1,0 +1,66 @@
+# params.yaml
+# Central configuration file.
+# All scripts read from here — no hardcoded values anywhere.
+# Change a value here and re-run the pipeline. DVC will detect
+# which stages need to be re-executed.
+
+# ── Data ───────────────────────────────────────────────────────────
+data:
+  raw_path:   data/raw/Womens Clothing E-Commerce Reviews.csv
+  clean_path: data/processed/clean_data.csv
+
+  # Exact column names from the original CSV
+  text_column:   Review Text
+  rating_column: Rating
+
+# ── Labeling ───────────────────────────────────────────────────────
+# How the numeric Rating is converted to a sentiment class:
+#   Rating >= 4  → Positive
+#   Rating == 3  → Neutral
+#   Rating <= 2  → Negative
+labeling:
+  positive_threshold: 4
+  negative_threshold: 2
+  label_column: sentiment
+
+# ── Text preprocessing ─────────────────────────────────────────────
+# Mirrors the clean_text() function used in notebooks 01 and 02
+preprocessing:
+  language:         english
+  remove_stopwords: true
+  remove_urls:      true
+  remove_non_alpha: true
+
+# ── Train / Val / Test split ───────────────────────────────────────
+# Notebook 03 logic: first split 70/30, then split the 30 in half
+# Result: 70% train / 15% val / 15% test
+split:
+  val_test_size: 0.3   # first split  → 70% train, 30% temp
+  test_size:     0.5   # second split → 50% val,   50% test
+  random_state:  42
+  stratify:      true
+  text_col:      text
+  label_col:     label
+
+# ── Model ──────────────────────────────────────────────────────────
+# Best parameters found by GridSearch in notebook 04:
+#   LinearSVC(C=0.1), max_features=5000, ngram_range=(1,2)
+#   Best CV F1 macro: 0.6128
+model:
+  output_path: models/svm_pipeline.pkl
+  tfidf:
+    max_features: 5000
+    ngram_range:  [1, 2]
+  svm:
+    C:            0.1
+    class_weight: balanced
+
+# ── MLflow ─────────────────────────────────────────────────────────
+mlflow:
+  experiment_name: sentiment_fashion
+  tracking_uri:    mlruns
+
+# ── Reports ────────────────────────────────────────────────────────
+reports:
+  metrics_path:          reports/metrics.json
+  confusion_matrix_path: reports/confusion_matrix.png

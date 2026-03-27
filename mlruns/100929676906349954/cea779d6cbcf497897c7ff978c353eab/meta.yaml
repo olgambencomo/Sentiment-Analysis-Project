@@ -1,0 +1,14 @@
+artifact_uri: /Users/olgabencomo/Desktop/Proyectos Portafolio/Sentiment Analysis Project/mlruns/100929676906349954/cea779d6cbcf497897c7ff978c353eab/artifacts
+end_time: 1774629854632
+entry_point_name: ''
+experiment_id: '100929676906349954'
+lifecycle_stage: active
+run_id: cea779d6cbcf497897c7ff978c353eab
+run_name: svm_train
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1774629850906
+status: 3
+tags: []
+user_id: olgabencomo

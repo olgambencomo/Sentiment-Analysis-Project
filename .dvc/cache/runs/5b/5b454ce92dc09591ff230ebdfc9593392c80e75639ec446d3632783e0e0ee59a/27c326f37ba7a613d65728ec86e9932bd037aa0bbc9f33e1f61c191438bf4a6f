@@ -1,0 +1,31 @@
+cmd: python src/data/load.py --params params.yaml
+deps:
+- path: data/raw/Womens Clothing E-Commerce Reviews.csv
+  hash: md5
+  md5: 0a739940276c8d252de145f7d5f830b2
+  size: 8483448
+- path: src/data/load.py
+  hash: md5
+  md5: 82f1c5c18f26f571bb7c70a547a1bd80
+  size: 2591
+params:
+  params.yaml:
+    data:
+      raw_path: data/raw/Womens Clothing E-Commerce Reviews.csv
+      clean_path: data/processed/clean_data.csv
+      text_column: Review Text
+      rating_column: Rating
+    labeling:
+      positive_threshold: 4
+      negative_threshold: 2
+      label_column: sentiment
+    preprocessing:
+      language: english
+      remove_stopwords: true
+      remove_urls: true
+      remove_non_alpha: true
+outs:
+- path: data/processed/clean_data.csv
+  hash: md5
+  md5: b1d9a2709a0a9862272c3c1e649c6194
+  size: 11417732

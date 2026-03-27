@@ -1,0 +1,11 @@
+artifact_location: /Users/olgabencomo/Desktop/Proyectos Portafolio/Sentiment Analysis
+  Project/mlruns/100929676906349954/models/m-5e7977a8f18f40b5b62cdb18bf001eb2/artifacts
+creation_timestamp: 1774566050973
+experiment_id: '100929676906349954'
+last_updated_timestamp: 1774566053632
+model_id: m-5e7977a8f18f40b5b62cdb18bf001eb2
+model_type: null
+name: model
+source_run_id: f2b7bfec11844803baa657f6dfda2083
+status: 2
+status_message: null

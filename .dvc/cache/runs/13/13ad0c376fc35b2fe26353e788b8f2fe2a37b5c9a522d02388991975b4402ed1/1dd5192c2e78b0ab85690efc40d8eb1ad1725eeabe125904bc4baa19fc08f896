@@ -1,0 +1,35 @@
+cmd: python src/models/evaluate.py --params params.yaml
+deps:
+- path: data/splits/X_test.csv
+  hash: md5
+  md5: 77ba4ebc10145ee7ea772dd07534ba53
+  size: 616572
+- path: data/splits/y_test.csv
+  hash: md5
+  md5: 08bb244036f56323f09bee68b621596c
+  size: 30155
+- path: models/svm_pipeline.pkl
+  hash: md5
+  md5: e9182f52ae06b254d02cee7f7a7f6613
+  size: 316473
+- path: src/models/evaluate.py
+  hash: md5
+  md5: 9f9a76256b09bcad091cc163d457ec16
+  size: 4936
+params:
+  params.yaml:
+    mlflow:
+      experiment_name: sentiment_fashion
+      tracking_uri: mlruns
+    reports:
+      metrics_path: reports/metrics.json
+      confusion_matrix_path: reports/confusion_matrix.png
+outs:
+- path: reports/confusion_matrix.png
+  hash: md5
+  md5: 3a7ca62814e7a3f3933cb10dd437bab6
+  size: 34937
+- path: reports/metrics.json
+  hash: md5
+  md5: 045525050b22e7c848ed79f73de628be
+  size: 137

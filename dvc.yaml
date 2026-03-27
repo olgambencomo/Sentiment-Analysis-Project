@@ -1,0 +1,77 @@
+# dvc.yaml
+# Defines the reproducible ML pipeline.
+#
+# Each stage declares:
+#   cmd    → the command to run
+#   deps   → files it depends on (script + inputs). If any dep changes → re-run.
+#   params → keys from params.yaml that affect this stage. If any param changes → re-run.
+#   outs   → files it produces. DVC caches these so unchanged stages are skipped.
+#   metrics / plots → special outputs DVC can display and compare across runs.
+#
+# Run the full pipeline:   dvc repro
+# Visualize the DAG:       dvc dag
+# Compare metrics:         dvc metrics show
+
+stages:
+
+  # ── Stage 1 ────────────────────────────────────────────────────────
+  load_data:
+    cmd: python src/data/load.py --params params.yaml
+    deps:
+      - src/data/load.py
+      - data/raw/Womens Clothing E-Commerce Reviews.csv
+    params:
+      - data
+      - labeling
+      - preprocessing
+    outs:
+      - data/processed/clean_data.csv
+
+  # ── Stage 2 ────────────────────────────────────────────────────────
+  build_features:
+    cmd: python src/data/features.py --params params.yaml
+    deps:
+      - src/data/features.py
+      - data/processed/clean_data.csv
+    params:
+      - split
+    outs:
+      - data/splits/X_train.csv
+      - data/splits/y_train.csv
+      - data/splits/X_val.csv
+      - data/splits/y_val.csv
+      - data/splits/X_test.csv
+      - data/splits/y_test.csv
+
+  # ── Stage 3 ────────────────────────────────────────────────────────
+  train:
+    cmd: python src/models/train.py --params params.yaml
+    deps:
+      - src/models/train.py
+      - data/splits/X_train.csv
+      - data/splits/y_train.csv
+      - data/splits/X_val.csv
+      - data/splits/y_val.csv
+    params:
+      - model
+      - mlflow
+    outs:
+      - models/svm_pipeline.pkl
+
+  # ── Stage 4 ────────────────────────────────────────────────────────
+  evaluate:
+    cmd: python src/models/evaluate.py --params params.yaml
+    deps:
+      - src/models/evaluate.py
+      - models/svm_pipeline.pkl
+      - data/splits/X_test.csv
+      - data/splits/y_test.csv
+    params:
+      - reports
+      - mlflow
+    metrics:
+      - reports/metrics.json:
+          cache: false
+    plots:
+      - reports/confusion_matrix.png:
+          cache: false

@@ -1,0 +1,24 @@
+artifact_path: /Users/olgabencomo/Desktop/Proyectos Portafolio/Sentiment Analysis
+  Project/mlruns/100929676906349954/models/m-5e7977a8f18f40b5b62cdb18bf001eb2/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.4
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-5e7977a8f18f40b5b62cdb18bf001eb2
+model_size_bytes: 316473
+model_uuid: m-5e7977a8f18f40b5b62cdb18bf001eb2
+prompts: null
+run_id: f2b7bfec11844803baa657f6dfda2083
+utc_time_created: '2026-03-26 23:00:50.978227'

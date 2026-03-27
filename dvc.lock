@@ -1,0 +1,158 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/data/load.py --params params.yaml
+    deps:
+    - path: data/raw/Womens Clothing E-Commerce Reviews.csv
+      hash: md5
+      md5: 0a739940276c8d252de145f7d5f830b2
+      size: 8483448
+    - path: src/data/load.py
+      hash: md5
+      md5: 82f1c5c18f26f571bb7c70a547a1bd80
+      size: 2591
+    params:
+      params.yaml:
+        data:
+          raw_path: data/raw/Womens Clothing E-Commerce Reviews.csv
+          clean_path: data/processed/clean_data.csv
+          text_column: Review Text
+          rating_column: Rating
+        labeling:
+          positive_threshold: 4
+          negative_threshold: 2
+          label_column: sentiment
+        preprocessing:
+          language: english
+          remove_stopwords: true
+          remove_urls: true
+          remove_non_alpha: true
+    outs:
+    - path: data/processed/clean_data.csv
+      hash: md5
+      md5: b1d9a2709a0a9862272c3c1e649c6194
+      size: 11417732
+  build_features:
+    cmd: python src/data/features.py --params params.yaml
+    deps:
+    - path: data/processed/clean_data.csv
+      hash: md5
+      md5: b1d9a2709a0a9862272c3c1e649c6194
+      size: 11417732
+    - path: src/data/features.py
+      hash: md5
+      md5: 65ddd7fdb9a3d1969dc5e6ce91f55473
+      size: 2892
+    params:
+      params.yaml:
+        split:
+          val_test_size: 0.3
+          test_size: 0.5
+          random_state: 42
+          stratify: true
+          text_col: text
+          label_col: label
+    outs:
+    - path: data/splits/X_test.csv
+      hash: md5
+      md5: 77ba4ebc10145ee7ea772dd07534ba53
+      size: 616572
+    - path: data/splits/X_train.csv
+      hash: md5
+      md5: 662453145db793a8f939d6edd39f6b9a
+      size: 2886911
+    - path: data/splits/X_val.csv
+      hash: md5
+      md5: c6f01ba53a0349d4146281ac507c8e43
+      size: 615885
+    - path: data/splits/y_test.csv
+      hash: md5
+      md5: 08bb244036f56323f09bee68b621596c
+      size: 30155
+    - path: data/splits/y_train.csv
+      hash: md5
+      md5: d133cfb4055496193892f845f06f087a
+      size: 140662
+    - path: data/splits/y_val.csv
+      hash: md5
+      md5: db32394560a289e453b842f3119d27f5
+      size: 30147
+  train:
+    cmd: python src/models/train.py --params params.yaml
+    deps:
+    - path: data/splits/X_train.csv
+      hash: md5
+      md5: 662453145db793a8f939d6edd39f6b9a
+      size: 2886911
+    - path: data/splits/X_val.csv
+      hash: md5
+      md5: c6f01ba53a0349d4146281ac507c8e43
+      size: 615885
+    - path: data/splits/y_train.csv
+      hash: md5
+      md5: d133cfb4055496193892f845f06f087a
+      size: 140662
+    - path: data/splits/y_val.csv
+      hash: md5
+      md5: db32394560a289e453b842f3119d27f5
+      size: 30147
+    - path: src/models/train.py
+      hash: md5
+      md5: 84fe7c1db4f610ca1f4d341d47137bdb
+      size: 4595
+    params:
+      params.yaml:
+        mlflow:
+          experiment_name: sentiment_fashion
+          tracking_uri: mlruns
+        model:
+          output_path: models/svm_pipeline.pkl
+          tfidf:
+            max_features: 5000
+            ngram_range:
+            - 1
+            - 2
+          svm:
+            C: 0.1
+            class_weight: balanced
+    outs:
+    - path: models/svm_pipeline.pkl
+      hash: md5
+      md5: e9182f52ae06b254d02cee7f7a7f6613
+      size: 316473
+  evaluate:
+    cmd: python src/models/evaluate.py --params params.yaml
+    deps:
+    - path: data/splits/X_test.csv
+      hash: md5
+      md5: 77ba4ebc10145ee7ea772dd07534ba53
+      size: 616572
+    - path: data/splits/y_test.csv
+      hash: md5
+      md5: 08bb244036f56323f09bee68b621596c
+      size: 30155
+    - path: models/svm_pipeline.pkl
+      hash: md5
+      md5: e9182f52ae06b254d02cee7f7a7f6613
+      size: 316473
+    - path: src/models/evaluate.py
+      hash: md5
+      md5: 9f9a76256b09bcad091cc163d457ec16
+      size: 4936
+    params:
+      params.yaml:
+        mlflow:
+          experiment_name: sentiment_fashion
+          tracking_uri: mlruns
+        reports:
+          metrics_path: reports/metrics.json
+          confusion_matrix_path: reports/confusion_matrix.png
+    outs:
+    - path: reports/confusion_matrix.png
+      hash: md5
+      md5: 3a7ca62814e7a3f3933cb10dd437bab6
+      size: 34937
+    - path: reports/metrics.json
+      hash: md5
+      md5: 045525050b22e7c848ed79f73de628be
+      size: 137
