@@ -472,12 +472,9 @@ with tab3:
 # ── FOOTER ──────────────────────────────────────────────────────────
 st.markdown("""
 <hr>
-<div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:24px;">
+<div style="display:flex;justify-content:center;align-items:center;padding-bottom:24px;">
     <div style="font-size:0.68rem;color:#ccc;letter-spacing:0.08em;text-transform:uppercase;">
-        Women's Clothing E-Commerce · 22,641 samples · 3-class classification
-    </div>
-    <div style="font-size:0.68rem;color:#ccc;letter-spacing:0.08em;text-transform:uppercase;">
-        LinearSVC · TF-IDF · scikit-learn · MLflow · DVC
+        Women's Clothing E-Commerce
     </div>
 </div>
 """, unsafe_allow_html=True)
